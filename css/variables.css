@@ -1,0 +1,38 @@
+/*************
+ * Variables *
+ *************/
+
+:root {
+  --gray-extra-light: #e7e7e7;
+  --gray-light: #ccc;
+  --gray: #999;
+  /* --gray-dark: #333; */
+
+  /* --primary-color-light: #fff9d2; */
+  --primary-color: #ffe64b;
+  --primary-color-active: #fadf30;
+  --primary-color-dark: #eac800;
+
+  --red-text: #dc3545;
+
+  --border-radius: 0.25rem;
+  --border-width: 1px;
+
+  --ring-shadow: 0 0 1px 3px #eee;
+
+  --transition-border: border-color 0.3s ease;
+  --transition-shadow: box-shadow 0.3s ease;
+  --transition-background: background-color 0.3s ease;
+}
+/* 
+--red: #842029;
+--red-light: #f8d7da;
+
+--green-light: #d1eacf;
+--green: #2b5229;
+
+--orange: rgb(217, 142, 1);
+
+--blue-light: #e6e8ef;
+--blue-prestashop: #bbcdd2;
+*/

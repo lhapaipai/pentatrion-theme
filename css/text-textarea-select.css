@@ -1,0 +1,44 @@
+/****************************
+ * Text - Textarea - Select *
+ ****************************/
+
+.penta-input-text,
+.penta-select,
+.penta-textarea {
+  appearance: none;
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  border: var(--border-width) solid var(--gray-extra-light);
+  font-size: 1rem;
+  background-color: #ffffff;
+  transition: var(--transition-border), var(--transition-shadow);
+  &:hover {
+    border-color: var(--gray-light);
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.10);
+
+  }
+  &:focus {
+    border-color: var(--primary-color-dark);
+    box-shadow: var(--ring-shadow);
+    outline: none;
+  }
+
+  &.is-invalid {
+    border-color: var(--red-text);
+  }
+
+  .with-a11y &:focus {
+    box-shadow: 0 0 0 2px #fff,0 0 0 4px #eac800;
+    outline: 0;
+    border-radius: var(--border-radius);
+    
+  }
+}
+
+.penta-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23333333' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-size: 1.5rem 1.5rem;
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  padding-right: 2.5rem;
+}

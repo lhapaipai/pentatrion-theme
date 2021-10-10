@@ -1,0 +1,52 @@
+/**********
+ * Toggle *
+ **********/
+
+.penta-toggle {
+  appearance: none;
+  outline: none;
+
+  height: 1.5rem;
+  width: 2.5rem;
+  border-radius: .75rem;
+  display: inline-block;
+  position: relative;
+  margin: 0 .25rem 0 0;
+  border: var(--border-width) solid var(--gray-extra-light);
+  background-color: var(--primary-color);
+  cursor: pointer;
+  line-height: 1.5rem;
+  vertical-align: -25%;
+
+  /* transition: all .15s ease; */
+  transition: var(--transition-border), var(--transition-shadow);
+
+  &:hover {
+    border-color: var(--gray-light);
+  }
+  &:focus {
+    border-color: var(--primary-color-dark);
+    box-shadow: var(--ring-shadow);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: calc(1.5rem - 2*var(--border-width) - 4px);
+    height: calc(1.5rem - 2*var(--border-width) - 4px);
+    border-radius: 50%;
+    background-color: white;
+    transition: all .15s cubic-bezier(.5, .1, .75, 1.35);
+  }
+  &:checked {
+    &::after {
+      background-color: var(--primary-color-dark);
+      transform: translateX(1rem);
+    }
+  }
+  .with-a11y &:focus {
+    box-shadow: 0 0 0 2px #fff,0 0 0 4px #eac800;
+  }
+}

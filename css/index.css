@@ -1,0 +1,17 @@
+@import "./variables.css";
+@import "./button.css";
+@import "./text-textarea-select.css";
+@import "./checkbox-radio.css";
+@import "./toggle.css";
+@import "./file.css";
+
+body {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+}
+
+#box {
+  margin: 0 auto;
+  width: 400px;
+  height: 500px;
+}
+
