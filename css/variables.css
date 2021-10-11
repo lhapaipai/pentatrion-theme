@@ -15,10 +15,9 @@
 
   --red-text: #dc3545;
 
-  --border-radius: 0.25rem;
-  --border-width: 1px;
-
-  --ring-shadow: 0 0 1px 3px #eee;
+  --form-border-radius: 0.25rem;
+  --form-border-width: 1px;
+  --form-ring-shadow: 0 0 1px 3px #eee;
 
   --transition-border: border-color 0.3s ease;
   --transition-shadow: box-shadow 0.3s ease;
