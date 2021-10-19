@@ -1,6 +1,7 @@
 {
   "name": "pentatrion-theme",
   "version": "0.0.0",
+  "main": "dist/pentatrion-theme.es.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

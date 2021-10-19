@@ -1,0 +1,31 @@
+div.EasyMDEContainer {
+  .editor-toolbar {
+    border: 1px solid var(--gray-extra-light);
+    border-bottom: 0;
+  }
+  .CodeMirror {
+    border: 1px solid var(--gray-extra-light);
+    &:hover {
+      border-color: var(--gray-light);
+    }
+    &.CodeMirror-focused {
+      border-color: var(--primary-color-dark);
+
+      body.with-a11y & {
+        box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary-color-dark);
+        border-color: var(--gray-extra-light);
+        outline: none;
+      }
+    }
+  }
+  .editor-statusbar .lines::before {
+    content: "lignes: ";
+  }
+  .editor-statusbar .words::before {
+    content: "mots: ";
+  }
+
+  .editor-preview {
+    padding: 14px;
+  }
+}

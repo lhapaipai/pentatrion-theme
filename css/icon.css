@@ -1,0 +1,25 @@
+.penta-icon {
+  appearance: none;
+  outline: none;
+  border: var(--form-border-width) solid transparent;
+  background-color: white;
+  transition: var(--transition-color), transform .3s ease;
+  cursor: pointer;
+  border-radius: var(--form-border-radius);
+
+  &,
+  &:visited {
+    color: var(--gray);
+  }
+  &:hover {
+    color: var(--gray-dark);
+  }
+
+  &:active {
+    color: black;
+  }
+
+  .with-a11y &:focus {
+    box-shadow: 0 0 0 2px #fff,0 0 0 4px var(--primary-color-dark);
+  }
+}

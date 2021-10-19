@@ -1,0 +1,43 @@
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin: 1.5rem 0;
+
+  > label {
+    display: block;
+    margin: 4px 0;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+  > input {
+    display: block;
+  }
+  .help-text {
+    color: $gray;
+    font-size: 0.9rem;
+  }
+
+  > button {
+    align-self: flex-start;
+  }
+}
+
+/* pour les checkbox */
+.form-group {
+  div {
+    > label {
+      margin: 4px 10px 4px 0;
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+  }
+
+  .thumbnail {
+    margin: 0.5rem 0;
+  }
+
+  table {
+    width: auto;
+  }
+}
+

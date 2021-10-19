@@ -20,8 +20,10 @@
   background-color: #fff;
   border: var(--form-border-width) solid var(--gray-extra-light);
 
-  line-height: 1.25rem;
-  vertical-align: -30%;
+  margin-top: 0;
+  margin-bottom: 0;
+  /* line-height: 1rem; */
+  vertical-align: -25%;
 
   transition: var(--transition-border), var(--transition-shadow);
 

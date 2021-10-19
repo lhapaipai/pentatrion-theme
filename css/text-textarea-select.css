@@ -33,6 +33,11 @@
     border-radius: var(--form-border-radius);
     
   }
+
+  &:disabled {
+    background-color: var(--gray-extra-light);
+    cursor: not-allowed;
+  }
 }
 
 .penta-select {
