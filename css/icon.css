@@ -2,11 +2,11 @@
   appearance: none;
   outline: none;
   border: var(--form-border-width) solid transparent;
-  background-color: white;
+  background-color: transparent;
   transition: var(--transition-color), transform .3s ease;
   cursor: pointer;
   border-radius: var(--form-border-radius);
-
+  text-decoration: none;
   &,
   &:visited {
     color: var(--gray);

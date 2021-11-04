@@ -13,7 +13,7 @@
     display: block;
   }
   .help-text {
-    color: $gray;
+    color: var(--gray);
     font-size: 0.9rem;
   }
 

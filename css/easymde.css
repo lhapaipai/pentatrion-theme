@@ -2,6 +2,13 @@ div.EasyMDEContainer {
   .editor-toolbar {
     border: 1px solid var(--gray-extra-light);
     border-bottom: 0;
+
+    i.fa:before {
+      font-size: .9rem;
+      line-height: .9rem;
+  
+      color: var(--gray-dark);
+    }
   }
   .CodeMirror {
     border: 1px solid var(--gray-extra-light);
