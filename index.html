@@ -11,6 +11,9 @@
 <body>
   <div id="box">
     <p>
+      <input type="range" min="0" max="20" step="5" data-penta-range>
+    </p>
+    <p>
       <button class="penta-button">Valider</button>
     </p>
     <p>
@@ -46,6 +49,23 @@
         <option value="2">Maroc</option>
       </select>
     </p>
+    <p>
+      <select name="select-simple" data-penta-select placeholder="choix simple">
+        <option value="2">Randria, Narivony</option>
+        <option value="3">Robert, Aileen</option>
+        <option value="4" selected="selected">Yam, Yan</option>
+        <option value="6">Zeta, Jones</option>
+      </select>
+    </p>
+    <p>
+      <select name="select-multiple" multiple data-penta-select placeholder="Choix multiple">
+        <option value="2">Randria, Narivony</option>
+        <option value="3">Robert, Aileen</option>
+        <option value="4">Yam, Yan</option>
+        <option value="6">Zeta, Jones</option>
+      </select>
+    </p>
+
     <p>
       <label for="fichier" class="penta-button">Parcourir</label>
       <input type="file" name="fichier" id="fichier" class="penta-input-file">

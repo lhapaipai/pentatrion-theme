@@ -4,6 +4,7 @@
 
 .penta-input-text,
 .penta-select,
+select[data-ogoxe-select],
 .penta-textarea {
   appearance: none;
   padding: 0.5rem;

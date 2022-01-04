@@ -4,6 +4,11 @@
 @import "./checkbox-radio.css";
 @import "./toggle.css";
 @import "./file.css";
+@import "./select-custom.css";
+
+@import "./range/input-reset.css";
+@import "./range/input.css";
+@import "./range/trackline.css";
 
 body {
   font-family: Avenir, Helvetica, Arial, sans-serif;

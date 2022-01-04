@@ -23,6 +23,16 @@
   --transition-border: border-color 0.3s ease;
   --transition-shadow: box-shadow 0.3s ease;
   --transition-background: background-color 0.3s ease;
+
+    /* for nice-select */
+  --input-height: 2.5rem;
+  /* --input-height: 3.5rem; */
+  --dropdown-border-radius: .75rem;
+  --dropdown-box-shadow: 0 0 2px #ccc;
+
+  /* for input range */
+  --range-input-height: 36px;
+  --range-track-height: 8px;
 }
 /* 
 --red: #842029;
