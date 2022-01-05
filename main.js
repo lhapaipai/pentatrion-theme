@@ -1,6 +1,6 @@
-import './css/index.css';
-import PentaSelect from './js/PentaSelect';
-import PentaInputRange from './js/PentaInputRange';
+import "./css/index.css";
+import PentaInputRange from "./js/PentaInputRange";
+import PentaSelect from "./js/PentaSelect";
 
 document.addEventListener("keyup", (e) => {
   if (e.code === "Tab") {
@@ -10,22 +10,21 @@ document.addEventListener("keyup", (e) => {
 
 /* for presentation only */
 
-let elts = document.querySelectorAll('p')
+let elts = document.querySelectorAll("p");
 elts.forEach((elt) => {
-  let container = document.createElement('div')
-  container.classList.add('code-container')
-  let code = document.createElement('code')
-  code.innerText = elt.innerHTML.trim()
+  let container = document.createElement("div");
+  container.classList.add("code-container");
+  let code = document.createElement("code");
+  code.innerText = elt.innerHTML.trim();
 
-  container.append(code)
-  elt.before(container)
-})
+  container.append(code);
+  elt.after(container);
+});
 
-/* selectors */
-document.querySelectorAll('select[data-penta-select]').forEach((elt) => {
-  new PentaSelect(elt)
-})
+document.querySelectorAll("input[data-penta-range]").forEach((elt) => {
+  new PentaInputRange(elt);
+});
 
-document.querySelectorAll('input[data-penta-range]').forEach((elt) => {
-  new PentaInputRange(elt)
-})
+document.querySelectorAll("select[data-penta-select-custom]").forEach((elt) => {
+  new PentaSelect(elt);
+});

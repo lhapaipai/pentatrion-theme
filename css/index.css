@@ -16,7 +16,11 @@ body {
 
 #box {
   margin: 0 auto;
-  width: 400px;
+  max-width: 400px;
   height: 500px;
 }
 
+h3 {
+  margin-top: 4rem;
+  margin-bottom: 1rem;
+}

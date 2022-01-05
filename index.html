@@ -10,8 +10,13 @@
 
 <body>
   <div id="box">
+
     <p>
       <input type="range" min="0" max="20" step="5" data-penta-range>
+    </p>
+    <p>
+      <input class="penta-input-text" type="date" value="2017-01-01">
+      <input class="penta-input-text" type="time" value="00:00">
     </p>
     <p>
       <button class="penta-button">Valider</button>
@@ -43,26 +48,38 @@
       <input type="radio" name="radio" id="radio1" class="penta-input-radio">
       <label for="radio1">Pas urgent</label>
     </p>
+    <h3>Select without JS</h3>
     <p>
       <select name="select" id="select" class="penta-select">
         <option value="1">France</option>
         <option value="2">Maroc</option>
+        <option value="3">Espagne</option>
+        <option value="4">Italie</option>
       </select>
     </p>
+
+    <h3>Select</h3>
     <p>
-      <select name="select-simple" data-penta-select placeholder="choix simple">
-        <option value="2">Randria, Narivony</option>
-        <option value="3">Robert, Aileen</option>
-        <option value="4" selected="selected">Yam, Yan</option>
-        <option value="6">Zeta, Jones</option>
+      <select name="select-simple" data-penta-select-custom>
+        <option value="">Choix simple</option>
+        <option value="2">Randria Narivony</option>
+        <option value="3">Robert Aileen</option>
+        <option value="4">Yam Yan</option>
+        <option value="6">Zeta Jones</option>
       </select>
     </p>
+
+    <h3>Multiple select with option groups</h3>
     <p>
-      <select name="select-multiple" multiple data-penta-select placeholder="Choix multiple">
-        <option value="2">Randria, Narivony</option>
-        <option value="3">Robert, Aileen</option>
-        <option value="4">Yam, Yan</option>
-        <option value="6">Zeta, Jones</option>
+      <select name="select-multiple" multiple data-penta-select-custom placeholder="Choisissez un prénom">
+        <optgroup label="Ogoxe">
+          <option value="2">Randria Narivony</option>
+          <option value="3">Robert Aileen</option>
+        </optgroup>
+        <optgroup label="Autre">
+          <option value="4">Yam Yan</option>
+          <option value="6">Zeta Jones</option>
+        </optgroup>
       </select>
     </p>
 

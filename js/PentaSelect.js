@@ -1,498 +1,547 @@
-// utility functions
-function triggerClick(el) {
-  let event = new Event('click', {
-    bubbles: true
-  })
-  el.dispatchEvent(event)
+function triggerEvent(type, $el) {
+  // console.log("triggerEvent", type, $el);
+  let event = new Event(type, {
+    bubbles: true,
+  });
+  $el.dispatchEvent(event);
 }
 
-function triggerChange(el) {
-  let event = new Event('change', {
-    bubbles: true
-  })
-  el.dispatchEvent(event)
-}
+export default class PentaSelect {
+  constructor(element, config, i18n = {}) {
+    this.$el = element;
+    if (!config && this.$el.dataset.pentaSelectCustom) {
+      let dataset = JSON.parse(this.$el.dataset.pentaSelectCustom);
+      config = dataset.config || {};
+      i18n = dataset.i18n || {};
+    }
+    this.config = Object.assign({}, PentaSelect.defaultConfig, config || {});
+    this.i18n = Object.assign({}, PentaSelect.i18n, i18n);
+    this.selectedOptions = [];
+    this.placeholder = this.$el.getAttribute("placeholder") || this.config.placeholder || "Choisissez une option";
+    this._className = "penta-select";
+    this._idCounter = 0;
+    this.$container = null;
+    this.multiple = this.$el.getAttribute("multiple") !== null;
+    this.disabled = this.$el.getAttribute("disabled") !== null;
 
-function triggerFocusIn(el) {
-  let event = new Event('focusin', {
-    bubbles: true
-  })
-  el.dispatchEvent(event)
-}
+    this._onClicked = this._onClicked.bind(this);
+    this._onKeyPressed = this._onKeyPressed.bind(this);
+    this._onClickedOutside = this._onClickedOutside.bind(this);
+    this._triggerFocusIn = triggerEvent.bind(this, "focusin", this.$el);
+    this._triggerFocusOut = triggerEvent.bind(this, "focusout", this.$el);
+    this._onSearchChanged = this._onSearchChanged.bind(this);
 
-function triggerFocusOut(el) {
-  let event = new Event('focusout', {
-    bubbles: true
-  })
-  el.dispatchEvent(event)
-}
-
-function hasClass(el, className) {
-  if (el) return el.classList.contains(className)
-  else return false
-}
-
-function addClass(el, className) {
-  if (el) return el.classList.add(className)
-}
-
-function removeClass(el, className) {
-  if (el) return el.classList.remove(className)
-}
-
-var defaultOptions = {
-  data: null,
-  searchable: false,
-  selectedItemPlaceholder: ' éléments sélectionnés'
-}
-
-function PentaSelect(element, options) {
-  this.el = element
-  this.config = Object.assign({}, defaultOptions, options || {})
-  this.data = this.config.data
-  this.selectedOptions = []
-  this.id = 'select-' + Math.floor(Math.random() * 100000)
-  this.placeholder = this.el.getAttribute('placeholder') || this.config.placeholder || 'Select an option'
-
-  this.dropdown = null
-  this.multiple = this.el.getAttribute('multiple') !== null
-  this.disabled = this.el.getAttribute('disabled') !== null
-
-  this._onClicked = this._onClicked.bind(this)
-  this._onKeyPressed = this._onKeyPressed.bind(this)
-  this._onClickedOutside = this._onClickedOutside.bind(this)
-  this.triggerFocusIn = triggerFocusIn.bind(this, this.el)
-  this.triggerFocusOut = triggerFocusOut.bind(this, this.el)
-
-  this.create()
-}
-
-PentaSelect.prototype.create = function () {
-  this.el.style.display = 'none'
-  if (this.data) {
-    this.processData(this.data)
-  } else {
-    this.extractData()
+    this._onItemClicked = this._onItemClicked.bind(this);
+    this.create(this.config.data);
   }
 
-  this.renderDropdown()
-  this.bindEvent()
-}
-
-PentaSelect.prototype.processData = function (data) {
-  var options = []
-  data.forEach((item) => {
-    options.push({
-      data: item,
-      attributes: {
-        selected: false,
-        disabled: false,
-        optgroup: item.value == 'optgroup'
-      }
-    })
-  })
-  this.options = options
-}
-
-PentaSelect.prototype.extractData = function () {
-  var options = this.el.querySelectorAll('option,optgroup')
-  var data = []
-  var allOptions = []
-  var selectedOptions = []
-
-  options.forEach((item) => {
-    let itemData
-    if (item.tagName == 'OPTGROUP') {
-      itemData = {
-        text: item.label,
-        value: 'optgroup'
-      }
+  create(data) {
+    this.$el.style.display = "none";
+    if (data) {
+      this.processData(data);
     } else {
-      itemData = {
-        text: item.innerText,
-        value: item.value
-      }
+      this.extractData();
     }
 
-    var attributes = {
-      selected: item.getAttribute('selected') !== null,
-      disabled: item.getAttribute('disabled') !== null,
-      optgroup: item.tagName == 'OPTGROUP'
-    }
-
-    data.push(itemData)
-    allOptions.push({ data: itemData, attributes: attributes })
-  })
-
-  this.data = data
-  this.options = allOptions
-  this.options.forEach(function (item) {
-    if (item.attributes.selected) selectedOptions.push(item)
-  })
-
-  this.selectedOptions = selectedOptions
-}
-
-PentaSelect.prototype.renderDropdown = function () {
-  var classes = [
-    'penta-select-enhanced',
-    this.el.className || '',
-    this.disabled ? 'disabled' : '',
-    this.multiple ? 'has-multiple' : ''
-  ]
-
-  let searchHtml = `<div class="penta-select-search-box">
-<input type="text" class="penta-select-search" placeholder="Search..."/>
-</div>`
-
-  var html = `<div class="${classes.join(' ')}" tabindex="${this.disabled ? null : 0}">
-  <span class="${this.multiple ? 'multiple-options' : 'current'}"></span>
-  <div class="penta-select-dropdown">
-  ${this.config.searchable ? searchHtml : ''}
-  <ul class="list"></ul>
-  </div><span class="arrow"></span></div>
-`
-
-  this.el.insertAdjacentHTML('afterend', html)
-
-  this.dropdown = this.el.nextElementSibling
-  this._renderSelectTitle()
-  this._renderItems()
-}
-
-PentaSelect.prototype._renderSelectTitle = function () {
-  if (this.multiple) {
-    var selectedHtml = ''
-    if (window.getComputedStyle(this.dropdown).width == 'auto' || this.selectedOptions.length < 2) {
-      this.selectedOptions.forEach(function (item) {
-        selectedHtml += `<span class="current">${item.data.text}</span>`
-      })
-      selectedHtml = selectedHtml == '' ? this.placeholder : selectedHtml
-    } else {
-      selectedHtml = this.selectedOptions.length + this.config.selectedItemPlaceholder
-    }
-
-    this.dropdown.querySelector('.multiple-options').innerHTML = selectedHtml
-  } else {
-    var html = this.selectedOptions.length > 0 ? this.selectedOptions[0].data.text : this.placeholder
-
-    this.dropdown.querySelector('.current').innerHTML = html
-  }
-}
-
-PentaSelect.prototype._renderItems = function () {
-  var ul = this.dropdown.querySelector('ul')
-  this.options.forEach((item) => {
-    ul.appendChild(this._renderItem(item))
-  })
-}
-
-PentaSelect.prototype._renderItem = function (option) {
-  var el = document.createElement('li')
-  let selected = option.attributes.selected
-  let disabled = option.attributes.disabled
-
-  let content
-  if (this.multiple) {
-    content = `<span class="penta-input-checkbox fake-input ${disabled ? 'disabled' : ''} ${
-      selected ? 'checked' : ''
-    }"></span><span class="fake-label">${option.data.text}</span>`
-  } else {
-    content = `<span class="penta-input-radio fake-input ${disabled ? 'disabled' : ''} ${
-      selected ? 'checked' : ''
-    }"></span><span class="fake-label">${option.data.text}</span>`
+    this.renderDropDown();
+    this.bindEvent();
   }
 
-  el.innerHTML = content
-  if (option.attributes.optgroup) {
-    el.classList.add('optgroup')
-  } else {
-    el.setAttribute('data-value', option.data.value)
-    el.classList.add('option')
-    if (option.attributes.selected) {
-      el.classList.add('selected')
-    }
-    if (option.attributes.disabled) {
-      el.classList.add('disabled')
-    }
+  processData(data) {
+    let options = [];
+    data.forEach((itemData) => {
+      options.push({
+        data: itemData,
+        attributes: {
+          selected: false,
+          disabled: false,
+          optgroup: itemData.value === "optgroup",
+        },
+        id: this._idCounter++,
+      });
+    });
 
-    el.addEventListener('click', this._onItemClicked.bind(this, option))
+    this.infos = options;
   }
 
-  option.element = el
-  return el
-}
+  extractData() {
+    let $options = this.$el.querySelectorAll("option,optgroup");
+    let data = [];
+    let options = [];
+    let selectedOptions = [];
 
-PentaSelect.prototype.update = function () {
-  this.extractData()
-  if (this.dropdown) {
-    var open = hasClass(this.dropdown, 'open')
-    this.dropdown.parentNode.removeChild(this.dropdown)
-    this.create()
-
-    if (open) {
-      triggerClick(this.dropdown)
-    }
-  }
-}
-
-PentaSelect.prototype.disable = function () {
-  if (!this.disabled) {
-    this.disabled = true
-    addClass(this.dropdown, 'disabled')
-  }
-}
-
-PentaSelect.prototype.enable = function () {
-  if (this.disabled) {
-    this.disabled = false
-    removeClass(this.dropdown, 'disabled')
-  }
-}
-
-PentaSelect.prototype.clear = function () {
-  this.selectedOptions = []
-  this._renderSelectTitle()
-  this.updateSelectValue()
-  triggerChange(this.el)
-}
-
-PentaSelect.prototype.destroy = function () {
-  if (this.dropdown) {
-    this.dropdown.parentNode.removeChild(this.dropdown)
-    this.el.style.display = ''
-
-    this.dropdown.removeEventListener('click', this._onClicked)
-    this.dropdown.removeEventListener('keydown', this._onKeyPressed)
-    this.dropdown.removeEventListener('focusin', triggerFocusIn.bind(this, this.el))
-    this.dropdown.removeEventListener('focusout', triggerFocusOut.bind(this, this.el))
-    window.removeEventListener('click', this._onClickedOutside.bind(this))
-  }
-}
-
-PentaSelect.prototype.bindEvent = function () {
-  this.dropdown.addEventListener('click', this._onClicked)
-  this.dropdown.addEventListener('keydown', this._onKeyPressed)
-  this.dropdown.addEventListener('focusin', triggerFocusIn.bind(this, this.el))
-  this.dropdown.addEventListener('focusout', triggerFocusOut.bind(this, this.el))
-  window.addEventListener('click', this._onClickedOutside)
-
-  if (this.config.searchable) {
-    this._bindSearchEvent()
-  }
-}
-
-PentaSelect.prototype._bindSearchEvent = function () {
-  var searchBox = this.dropdown.querySelector('.penta-select-search')
-  if (searchBox)
-    searchBox.addEventListener('click', function (e) {
-      e.stopPropagation()
-      return false
-    })
-
-  searchBox.addEventListener('input', this._onSearchChanged.bind(this))
-}
-
-PentaSelect.prototype._onClicked = function (e) {
-  let eltBottom = this.dropdown.getBoundingClientRect().bottom
-  if (document.documentElement.clientHeight - eltBottom < 70) {
-    this.dropdown.classList.add('reversed')
-  } else {
-    this.dropdown.classList.remove('reversed')
-  }
-
-  if (this.multiple) {
-    if (e.target.classList.contains('multiple-options')) {
-      this.dropdown.classList.toggle('open')
-    } else {
-      this.dropdown.classList.add('open')
-    }
-  } else {
-    this.dropdown.classList.toggle('open')
-  }
-
-  if (this.dropdown.classList.contains('open')) {
-    var search = this.dropdown.querySelector('.penta-select-search')
-    if (search) {
-      search.value = ''
-      search.focus()
-    }
-
-    var t = this.dropdown.querySelector('.focus')
-    if (t) {
-      t.classList.remove('focus')
-    }
-    let currentOption = e.target.closest('.option')
-    if (currentOption) {
-      currentOption.classList.add('focus')
-    }
-    this.dropdown.querySelectorAll('ul li').forEach(function (item) {
-      item.style.display = ''
-    })
-  } else {
-    this.dropdown.focus()
-  }
-}
-
-PentaSelect.prototype._onItemClicked = function (option, e) {
-  var optionEl = e.target.closest('.option')
-  // e.stopPropagation()
-
-  if (!hasClass(optionEl, 'disabled')) {
-    if (this.multiple) {
-      if (hasClass(optionEl, 'selected')) {
-        removeClass(optionEl, 'selected')
-        this.selectedOptions.splice(this.selectedOptions.indexOf(option), 1)
-        this.el.querySelector('option[value="' + optionEl.dataset.value + '"]').selected = false
-        optionEl.querySelector('.fake-input').classList.remove('checked')
+    $options.forEach(($option) => {
+      let itemData;
+      if ($option.tagName == "OPTGROUP") {
+        itemData = {
+          label: $option.label,
+          value: "optgroup",
+        };
       } else {
-        addClass(optionEl, 'selected')
-        this.selectedOptions.push(option)
-        optionEl.querySelector('.fake-input').classList.add('checked')
+        if (!$option.value) {
+          this.placeholder = $option.innerText;
+        }
+
+        itemData = {
+          label: $option.innerText,
+          value: $option.value,
+        };
       }
-    } else {
-      this.selectedOptions.forEach(function (item) {
-        removeClass(item.element, 'selected')
-      })
 
-      addClass(optionEl, 'selected')
-      let listEl = optionEl.closest('.list')
-      listEl.querySelectorAll('.fake-input').forEach((e) => e.classList.remove('checked'))
-      optionEl.querySelector('.fake-input').classList.add('checked')
-      this.selectedOptions = [option]
-    }
+      let itemAttributes = {
+        selected: $option.selected,
+        disabled: $option.disabled,
+        optgroup: $option.tagName == "OPTGROUP",
+      };
 
-    this._renderSelectTitle()
-    this.updateSelectValue()
-  }
-}
+      data.push(itemData);
+      options.push({
+        data: itemData,
+        attributes: itemAttributes,
+        id: this._idCounter++,
+      });
+    });
 
-PentaSelect.prototype.updateSelectValue = function () {
-  if (this.multiple) {
-    var select = this.el
-    this.selectedOptions.forEach(function (item) {
-      var el = select.querySelector('option[value="' + item.data.value + '"]')
-      if (el) {
-        el.setAttribute('selected', true)
+    this.data = data;
+    this.infos = options;
+    this.infos.forEach((itemInfos) => {
+      if (itemInfos.attributes.selected) {
+        selectedOptions.push(itemInfos);
       }
-    })
-  } else if (this.selectedOptions.length > 0) {
-    this.el.value = this.selectedOptions[0].data.value
+    });
+
+    this.selectedOptions = selectedOptions;
   }
-  triggerChange(this.el)
-}
 
-PentaSelect.prototype._onClickedOutside = function (e) {
-  if (!this.dropdown.contains(e.target)) {
-    this.dropdown.classList.remove('open')
-  }
-}
+  update() {
+    if (this.$container) {
+      let open = this.$container.classList.contains("open");
+      this.$container.remove();
+      this.create();
 
-PentaSelect.prototype._onKeyPressed = function (e) {
-  // Keyboard events
-
-  var focusedOption = this.dropdown.querySelector('.focus')
-
-  var open = this.dropdown.classList.contains('open')
-  let t
-  // Space or Enter
-  if (e.keyCode == 32 || e.keyCode == 13) {
-    if (open) {
-      triggerClick(focusedOption)
-    } else {
-      triggerClick(this.dropdown)
-    }
-  } else if (e.keyCode == 40) {
-    // Down
-    if (!open) {
-      triggerClick(this.dropdown)
-    } else {
-      var next = this._findNext(focusedOption)
-      if (next) {
-        t = this.dropdown.querySelector('.focus')
-        removeClass(t, 'focus')
-        addClass(next, 'focus')
+      if (open) {
+        // console.log("triggerEvent click on update");
+        triggerEvent("click", this.$container);
       }
     }
-    e.preventDefault()
-  } else if (e.keyCode == 38) {
-    // Up
-    if (!open) {
-      triggerClick(this.dropdown)
+  }
+
+  disable() {
+    if (!this.disabled) {
+      this.disabled = true;
+      this.$container.classList.add("disabled");
+    }
+  }
+
+  enable() {
+    if (this.disabled) {
+      this.disabled = false;
+      this.$container.classList.remove("disabled");
+    }
+  }
+
+  clearSelection() {
+    this.selectedOptions = [];
+    this._renderSelectTitle();
+
+    this.infos.forEach((itemInfos) => {
+      itemInfos.$el.classList.remove("selected");
+    });
+    this.$list.querySelectorAll(".fake-input").forEach((i) => i.classList.remove("checked"));
+
+    // real select
+    this.$el.querySelectorAll("option").forEach((o) => {
+      o.selected = false;
+      o.removeAttribute("selected");
+    });
+
+    triggerEvent("change", this.$el);
+  }
+
+  renderDropDown() {
+    let classes = [
+      this._className + "-custom",
+      this.$el.className || "",
+      this.disabled ? "disabled" : "",
+      this.multiple ? "has-multiple" : "",
+    ];
+
+    let $container = (this.$container = document.createElement("div"));
+    $container.className = classes.join(" ");
+    if (!this.disabled) {
+      $container.tabIndex = 0;
+    }
+
+    let $selection = (this.$selection = document.createElement("span"));
+    $selection.classList.add("selection");
+    let $dropdown = document.createElement("div");
+    $dropdown.classList.add("dropdown");
+
+    if (this.config.searchable) {
+      let $searchContainer = document.createElement("div");
+      $searchContainer.className = "search-box";
+
+      let $searchInput = (this.$searchInput = document.createElement("input"));
+      $searchInput.type = "text";
+      $searchInput.classList.add("penta-input-text");
+      $searchInput.classList.add("search-input");
+
+      $searchInput.placeholder = this.i18n.searchPlaceholder;
+
+      $searchContainer.append($searchInput);
+      $dropdown.append($searchContainer);
+    }
+
+    let $list = (this.$list = document.createElement("ul"));
+    $list.classList.add("list");
+
+    $dropdown.append($list);
+
+    let $arrow = document.createElement("span");
+    $arrow.classList.add("arrow");
+
+    $container.append($selection, $dropdown, $arrow);
+
+    this.$el.after($container);
+
+    this._renderSelectTitle();
+    this._renderItems();
+  }
+
+  _renderSelectTitle() {
+    this.$selection.innerHTML = "";
+
+    if (this.selectedOptions.length == 0) {
+      let $placeholder = document.createElement("span");
+      $placeholder.innerText = this.placeholder;
+
+      this.$selection.append($placeholder);
+    } else if (this.selectedOptions.length == 1 || this.config.showSelectionAsTags) {
+      this.selectedOptions.forEach((item) => {
+        let $item = document.createElement("span");
+        if (this.multiple && this.config.showSelectionAsTags) {
+          $item.className = "tag";
+        }
+        $item.innerText = item.data.label;
+        this.$selection.append($item);
+      });
     } else {
-      var prev = this._findPrev(focusedOption)
-      if (prev) {
-        t = this.dropdown.querySelector('.focus')
-        removeClass(t, 'focus')
-        addClass(prev, 'focus')
+      let $placeholder = document.createElement("span");
+      $placeholder.innerText = this.selectedOptions.length + this.i18n.selectedItemsPlaceholder;
+      this.$selection.append($placeholder);
+    }
+  }
+  _renderItems() {
+    this.infos.forEach((itemInfos) => {
+      let $item = document.createElement("li");
+      let { selected, disabled, optgroup } = itemInfos.attributes;
+
+      if (optgroup) {
+        $item.classList.add("optgroup");
+      } else {
+        $item.dataset.value = itemInfos.data.value;
+        $item.dataset.id = itemInfos.id;
+        $item.classList.add("option");
+        if (selected) {
+          $item.classList.add("selected");
+        }
+        if (disabled) {
+          $item.classList.add("disabled");
+        }
+        $item.addEventListener("click", this._onItemClicked);
+
+        let $span = document.createElement("span");
+        $span.type = this.multiple ? "checkbox" : "radio";
+        $span.classList.add("fake-input");
+        $span.classList.add(this.multiple ? "penta-input-checkbox" : "penta-input-radio");
+        if (disabled) {
+          $span.classList.add("disabled");
+        }
+        if (selected) {
+          $span.classList.add("checked");
+        }
+
+        $item.append($span);
       }
+
+      let $label = document.createElement("span");
+      $label.className = "fake-label";
+      $label.innerText = itemInfos.data.label;
+
+      $item.append($label);
+
+      this.$list.append($item);
+      itemInfos.$el = $item;
+    });
+  }
+  bindEvent() {
+    this.$container.addEventListener("click", this._onClicked);
+    this.$container.addEventListener("keydown", this._onKeyPressed);
+    this.$container.addEventListener("focusin", this._triggerFocusIn);
+    this.$container.addEventListener("focusout", this._triggerFocusOut);
+    window.addEventListener("click", this._onClickedOutside);
+
+    if (this.config.searchable) {
+      this.$searchInput.addEventListener("click", this._stopPropagation);
+      this.$searchInput.addEventListener("input", this._onSearchChanged);
     }
-    e.preventDefault()
-  } else if (e.keyCode == 27 && open) {
-    // Esc
-    triggerClick(this.dropdown)
   }
-  return false
-}
-
-PentaSelect.prototype._findNext = function (el) {
-  if (el) {
-    el = el.nextElementSibling
-  } else {
-    el = this.dropdown.querySelector('.list .option')
+  _stopPropagation(e) {
+    e._stopPropagation();
+    return false;
   }
+  _onSearchChanged(e) {
+    let open = this.$container.classList.contains("open");
+    let text = e.target.value;
+    text = text.toLowerCase();
 
-  while (el) {
-    if (!hasClass(el, 'disabled') && el.style.display != 'none') {
-      return el
+    if (text == "") {
+      this.infos.forEach((itemInfos) => {
+        itemInfos.$el.style.display = "";
+      });
+    } else if (open) {
+      let matchReg = new RegExp(text);
+      this.infos.forEach((itemInfos) => {
+        let itemLabel = itemInfos.data.label.toLowerCase();
+        let matched = matchReg.test(itemLabel);
+        itemInfos.$el.style.display = matched ? "" : "none";
+      });
     }
-    el = el.nextElementSibling
+
+    this.$container.querySelectorAll(".focus").forEach((i) => {
+      i.classList.remove("focus");
+    });
+
+    let $first = this._findNext(null);
+    $first.classList.add("focus");
   }
 
-  return null
-}
-
-PentaSelect.prototype._findPrev = function (el) {
-  if (el) {
-    el = el.previousElementSibling
-  } else {
-    el = this.dropdown.querySelector('.list .option:last-child')
+  _getItemInfoFromElt(elt) {
+    let id = parseInt(elt.dataset.id);
+    return this.infos.find((i) => i.id === id);
   }
 
-  while (el) {
-    if (!hasClass(el, 'disabled') && el.style.display != 'none') {
-      return el
+  _onItemClicked(e) {
+    let $option = e.target.closest(".option");
+    let itemInfos = this._getItemInfoFromElt($option);
+    // console.log("_onItemClicked", $option, itemInfos);
+    if (!$option.classList.contains("disabled")) {
+      // ici on retire les selections
+      if (this.multiple) {
+        if ($option.classList.contains("selected")) {
+          // fake select
+          $option.classList.remove("selected");
+          $option.querySelector(".fake-input").classList.remove("checked");
+
+          // real select
+          let $item = this.$el.querySelector(`option[value="${$option.dataset.value}"]`);
+          if ($item) {
+            $item.selected = false;
+            $item.removeAttribute("selected");
+          }
+
+          this.selectedOptions.splice(this.selectedOptions.indexOf(itemInfos), 1);
+        } else {
+          this.selectedOptions.push(itemInfos);
+        }
+      } else {
+        // fake select
+        this.selectedOptions.forEach((itemInfos) => {
+          itemInfos.$el.classList.remove("selected");
+        });
+        this.$list.querySelectorAll(".fake-input").forEach((i) => i.classList.remove("checked"));
+
+        // real select
+        this.$el.querySelectorAll("option").forEach((o) => {
+          o.selected = false;
+          o.removeAttribute("selected");
+        });
+
+        this.selectedOptions = [itemInfos];
+      }
+
+      // ici on les ajoute
+      this.selectedOptions.forEach((itemInfos) => {
+        let $item = this.$el.querySelector(`option[value="${itemInfos.data.value}"]`);
+        if ($item) {
+          $item.setAttribute("selected", true);
+          $item.selected = true;
+          itemInfos.$el.querySelector(".fake-input").classList.add("checked");
+          itemInfos.$el.classList.add("selected");
+        }
+      });
+      this._renderSelectTitle();
     }
-    el = el.previousElementSibling
   }
 
-  return null
-}
+  _onClicked(e) {
+    // console.log("_onClicked", e);
+    let containerBottom = this.$container.getBoundingClientRect().bottom;
+    if (document.documentElement.clientHeight - containerBottom < 170) {
+      this.$container.classList.add("reversed");
+    } else {
+      this.$container.classList.remove("reversed");
+    }
 
-PentaSelect.prototype._onSearchChanged = function (e) {
-  var open = this.dropdown.classList.contains('open')
-  var text = e.target.value
-  text = text.toLowerCase()
+    if (this.multiple) {
+      if (e.target.closest(".selection")) {
+        this.$container.classList.toggle("open");
+      } else {
+        this.$container.classList.add("open");
+      }
+    } else {
+      this.$container.classList.toggle("open");
+    }
 
-  if (text == '') {
-    this.options.forEach(function (item) {
-      item.element.style.display = ''
-    })
-  } else if (open) {
-    var matchReg = new RegExp(text)
-    this.options.forEach(function (item) {
-      var optionText = item.data.text.toLowerCase()
-      var matched = matchReg.test(optionText)
-      item.element.style.display = matched ? '' : 'none'
-    })
+    if (this.$container.classList.contains("open")) {
+      if (this.$searchInput) {
+        this.$searchInput.value = "";
+        this.$searchInput.focus();
+        this.$container.querySelectorAll("ul li").forEach((i) => (i.style.display = ""));
+      }
+
+      let t = this.$container.querySelector(".focus");
+      if (t) {
+        t.classList.remove("focus");
+      }
+
+      let currentOption = e.target.closest(".option");
+      if (currentOption) {
+        currentOption.classList.add("focus");
+      }
+    } else {
+      // on a fermé le dropdown mais on souhaite que le focus soit
+      // toujours sur lui
+      this.$container.focus();
+    }
+  }
+  _onKeyPressed(e) {
+    let $focusedItem = this.$container.querySelector(".focus");
+    let open = this.$container.classList.contains("open");
+
+    if (e.key === "Tab" || e.key == "Escape") {
+      if (open) {
+        if (this.multiple) {
+          triggerEvent("click", this.$selection);
+        } else {
+          triggerEvent("click", this.$container);
+        }
+        e.preventDefault();
+      }
+    } else if (e.key === "Enter") {
+      if (open) {
+        if (this.multiple) {
+          triggerEvent("click", this.$selection);
+        } else if ($focusedItem) {
+          triggerEvent("click", $focusedItem);
+        }
+        e.preventDefault();
+      }
+    } else if (e.code == "Space") {
+      if (open) {
+        if ($focusedItem) {
+          triggerEvent("click", $focusedItem);
+        }
+      } else {
+        triggerEvent("click", this.$container);
+      }
+      e.preventDefault();
+    } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+      if (!open) {
+        triggerEvent("click", this.$container);
+      } else {
+        var $next = this._findNext($focusedItem);
+        if ($next) {
+          if ($focusedItem) {
+            $focusedItem.classList.remove("focus");
+          }
+          $next.classList.add("focus");
+        }
+      }
+      e.preventDefault();
+    } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+      if (!open) {
+        triggerEvent("click", this.$container);
+      } else {
+        var $prev = this._findPrev($focusedItem);
+        if ($prev) {
+          if ($focusedItem) {
+            $focusedItem.classList.remove("focus");
+          }
+          $prev.classList.add("focus");
+        }
+      }
+      e.preventDefault();
+    }
+    return false;
+  }
+  _findNext($el) {
+    if ($el) {
+      $el = $el.nextElementSibling;
+    } else {
+      $el = this.$container.querySelector(".list .option");
+    }
+
+    while ($el) {
+      if (!$el.classList.contains("disabled") && !$el.classList.contains("optgroup") && $el.style.display != "none") {
+        return $el;
+      }
+      $el = $el.nextElementSibling;
+    }
+
+    return null;
+  }
+  _findPrev($el) {
+    if ($el) {
+      $el = $el.previousElementSibling;
+    } else {
+      $el = this.$container.querySelector(".list .option:last-child");
+    }
+
+    while ($el) {
+      if (!$el.classList.contains("disabled") && !$el.classList.contains("optgroup") && $el.style.display != "none") {
+        return $el;
+      }
+      $el = $el.previousElementSibling;
+    }
+
+    return null;
   }
 
-  this.dropdown.querySelectorAll('.focus').forEach(function (item) {
-    removeClass(item, 'focus')
-  })
+  _onClickedOutside(e) {
+    if (!this.$container.contains(e.target)) {
+      this.$container.classList.remove("open");
+    }
+  }
 
-  var firstEl = this._findNext(null)
-  addClass(firstEl, 'focus')
+  destroy() {
+    this.infos.forEach((itemInfos) => {
+      itemInfos.$el.removeEventListener("click", this._onItemClicked);
+    });
+
+    this.$container.removeEventListener("click", this._onClicked);
+    this.$container.removeEventListener("keydown", this._onKeyPressed);
+    this.$container.removeEventListener("focusin", this._triggerFocusIn);
+    this.$container.removeEventListener("focusout", this._triggerFocusOut);
+    window.removeEventListener("click", this._onClickedOutside);
+
+    if (this.config.searchable) {
+      this.$searchInput.removeEventListener("click", this._stopPropagation);
+      this.$searchInput.removeEventListener("input", this._onSearchChanged);
+    }
+    this.$el.style.display = "";
+    this.$container.remove();
+  }
 }
 
-export default PentaSelect
+PentaSelect.defaultConfig = {
+  searchable: false,
+
+  // only with multiple
+  showSelectionAsTags: false,
+};
+
+PentaSelect.i18n = {
+  searchPlaceholder: "Rechercher...",
+  selectedItemsPlaceholder: " éléments sélectionnés",
+};

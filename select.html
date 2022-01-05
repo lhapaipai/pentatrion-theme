@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="data:;base64,iBORw0KGgo=">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite App</title>
+</head>
+
+<body>
+  <div id="box">
+    <h3>Select disabled</h3>
+    <p>
+      <select name="select-simple" data-penta-select-custom disabled>
+        <option value="">Choix simple</option>
+        <option value="2">Randria Narivony</option>
+        <option value="3">Robert Aileen</option>
+        <option value="4" selected="selected">Yam Yan</option>
+        <option value="6">Zeta Jones</option>
+      </select>
+    </p>
+    <h3>Select</h3>
+    <p>
+      <select name="select-simple" data-penta-select-custom>
+        <option value="">Choix simple</option>
+        <option value="2">Randria Narivony</option>
+        <option value="3">Robert Aileen</option>
+        <option value="4">Yam Yan</option>
+        <option value="6">Zeta Jones</option>
+      </select>
+    </p>
+    <h3>Multiple select</h3>
+    <p>
+      <select name="select-multiple" multiple data-penta-select-custom placeholder="Choix multiple">
+        <option value="2" selected>Randria Narivony</option>
+        <option value="3">Robert Aileen</option>
+        <option value="4">Yam Yan</option>
+        <option value="6">Zeta Jones</option>
+      </select>
+    </p>
+    <h3>Multiple select with multiple initial selection</h3>
+    <p>
+      <select name="select-multiple" multiple data-penta-select-custom placeholder="placeholder for choix multiple">
+        <option value="2" selected>Randria Narivony</option>
+        <option value="3" selected>Robert Aileen</option>
+        <option value="4">Yam Yan</option>
+        <option value="6" selected>Zeta Jones</option>
+      </select>
+    </p>
+    <h3>Multiple select with option groups</h3>
+    <p>
+      <select name="select-multiple" multiple data-penta-select-custom placeholder="placeholder for choix multiple">
+        <optgroup label="Ogoxe">
+          <option value="2">Randria Narivony</option>
+          <option value="3">Robert Aileen</option>
+        </optgroup>
+        <optgroup label="Autre">
+          <option value="4">Yam Yan</option>
+          <option value="6">Zeta Jones</option>
+        </optgroup>
+      </select>
+    </p>
+    <h3>Select original script</h3>
+    <p>
+      <select name="select-simple" data-penta-select placeholder="choix simple">
+        <option value="2">Randria Narivony</option>
+        <option value="3">Robert Aileen</option>
+        <option value="4" selected="selected">Yam Yan</option>
+        <option value="6">Zeta Jones</option>
+      </select>
+    </p>
+    <h3>Multiple select original script</h3>
+    <p>
+      <select name="select-multiple" multiple data-penta-select placeholder="Choix multiple">
+        <option value="2">Randria Narivony</option>
+        <option value="3">Robert Aileen</option>
+        <option value="4">Yam Yan</option>
+        <option value="6">Zeta Jones</option>
+      </select>
+    </p>
+
+  </div>
+  <script type="module" src="/main.js"></script>
+</body>
+
+</html>

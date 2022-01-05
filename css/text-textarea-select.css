@@ -2,17 +2,29 @@
  * Text - Textarea - Select *
  ****************************/
 
+ .penta-input-text,
+ .penta-select,
+ select[data-penta-select] {
+     height: var(--input-height);
+ }
+ .penta-textarea {
+     padding: 0.9rem 1rem;
+ }
+ 
+
 .penta-input-text,
 .penta-select,
-select[data-ogoxe-select],
+select[data-penta-select],
 .penta-textarea {
   appearance: none;
-  padding: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   border-radius: var(--form-border-radius);
   border: var(--form-border-width) solid var(--gray-extra-light);
   font-size: 1rem;
   background-color: #ffffff;
   transition: var(--transition-border), var(--transition-shadow);
+  font-family: inherit;
   &:hover {
     border-color: var(--gray-light);
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.10);

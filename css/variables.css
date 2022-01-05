@@ -8,7 +8,7 @@
   --gray: #999;
   /* --gray-dark: #333; */
 
-  /* --primary-color-light: #fff9d2; */
+  --primary-color-light: #ffed7e;
   --primary-color: #ffe64b;
   --primary-color-active: #fadf30;
   --primary-color-dark: #eac800;
@@ -26,6 +26,7 @@
 
     /* for nice-select */
   --input-height: 2.5rem;
+  --option-height: 2rem;
   /* --input-height: 3.5rem; */
   --dropdown-border-radius: .75rem;
   --dropdown-box-shadow: 0 0 2px #ccc;
