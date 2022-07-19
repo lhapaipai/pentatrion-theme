@@ -1,26 +1,26 @@
 div.EasyMDEContainer {
   .editor-toolbar {
-    border: 1px solid var(--gray-extra-light);
+    border: 1px solid var(--grey50);
     border-bottom: 0;
 
     i.fa:before {
       font-size: .9rem;
       line-height: .9rem;
   
-      color: var(--gray-dark);
+      color: var(--grey700);
     }
   }
   .CodeMirror {
-    border: 1px solid var(--gray-extra-light);
+    border: 1px solid var(--grey50);
     &:hover {
-      border-color: var(--gray-light);
+      border-color: var(--grey200);
     }
     &.CodeMirror-focused {
-      border-color: var(--primary-color-dark);
+      border-color: var(--primary-color700);
 
       body.with-a11y & {
-        box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary-color-dark);
-        border-color: var(--gray-extra-light);
+        box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary-color700);
+        border-color: var(--grey50);
         outline: none;
       }
     }

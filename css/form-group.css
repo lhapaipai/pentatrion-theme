@@ -3,11 +3,13 @@
   flex-direction: column;
   margin: 1.5rem 0;
 
+  &.width-content {
+    align-items: flex-start;
+  }
+
   > label {
     display: block;
     margin: 4px 0;
-    font-size: 0.9rem;
-    font-weight: bold;
   }
   > input {
     display: block;
@@ -41,3 +43,84 @@
   }
 }
 
+.two-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--form-gap);
+  margin: 1.5rem 0;
+  & > .form-group {
+    flex: 1;
+    width: 100%;
+    text-overflow: ellipsis;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  @media (max-width: 900px) {
+      gap: 0px;
+      grid-template-columns: 1fr;
+
+  }
+}
+
+
+
+.form-group {
+  /* two-cols without label 
+    <div class="form-group">
+        <label>Coordonnées (sélectionnez sur la carte)</label>
+        <div class="two-cols">
+            {{ form_widget(form.latitude) }}
+            {{ form_widget(form.longitude) }}
+        </div>
+    </div>
+  */
+  .two-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 0;
+    margin-bottom: 0;
+    gap: var(--form-gap);
+    & > * {
+      width: 100%;
+    }
+    @media (max-width: 900px) {
+        gap: 15px;
+    }
+  }
+
+  .checkboxes {
+
+    > label {
+      margin: 4px 50px 4px 7px;
+    }
+    @media (max-width: 500px) {
+      > label {
+        margin: 4px 10px 4px 7px;
+      }
+    }
+
+  }
+
+  .thumbnail {
+    margin: 0.5rem 0;
+  }
+
+  table {
+    width: auto;
+  }
+}
+
+
+
+.input-with-suffix {
+  position: relative;
+
+  .suffix {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--blue-gray);
+    pointer-events: none;
+  }
+}

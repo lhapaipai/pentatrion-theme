@@ -164,7 +164,9 @@ export default class PentaSelect {
       this.$el.className || "",
       this.disabled ? "disabled" : "",
       this.multiple ? "has-multiple" : "",
-    ];
+      this.config.showSelectionAsTags ? "selection-tags" : "",
+      this.config.hideInputs ? "hide-inputs" : ""
+  ];
 
     let $container = (this.$container = document.createElement("div"));
     $container.className = classes.join(" ");
@@ -371,6 +373,8 @@ export default class PentaSelect {
         }
       });
       this._renderSelectTitle();
+
+      triggerEvent("change", this.$el);
     }
   }
 
@@ -535,6 +539,7 @@ export default class PentaSelect {
 }
 
 PentaSelect.defaultConfig = {
+  hideInputs: false,
   searchable: false,
 
   // only with multiple

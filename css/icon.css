@@ -12,7 +12,7 @@
     color: var(--gray);
   }
   &:hover {
-    color: var(--gray-dark);
+    color: var(--grey700);
   }
 
   &:active {
@@ -20,6 +20,11 @@
   }
 
   .with-a11y &:focus {
-    box-shadow: 0 0 0 2px #fff,0 0 0 4px var(--primary-color-dark);
+    box-shadow: 0 0 0 2px #fff,0 0 0 4px var(--primary-color700);
+  }
+
+  &.primary-color {
+    background-color: var(--primary-color);
+    color: var(--primary-color-text);
   }
 }

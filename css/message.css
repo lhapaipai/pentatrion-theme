@@ -1,0 +1,17 @@
+.message {
+  padding: 0.5rem 1rem;
+  border-radius: var(--form-border-radius);
+  font-size: 1rem;
+  font-weight: normal;
+
+  &.is-danger {
+    background-color: var(--red50);
+    color: var(--red-text);
+    border-left: 4px solid var(--red-text);
+  }
+
+  &.is-success {
+    border-left: 4px solid var(--primary-color);
+    background-color: var(--primary-color100);
+  }
+}

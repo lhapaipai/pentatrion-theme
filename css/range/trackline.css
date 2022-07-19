@@ -28,7 +28,7 @@
   }
 
   .track {
-    background: var(--primary-color-light);
+    background: var(--primary-color100);
     border-radius: 3px;
     margin-left: -2px;
     width: calc(100% + 4px);

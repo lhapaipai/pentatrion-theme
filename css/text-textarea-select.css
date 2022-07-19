@@ -20,18 +20,18 @@ select[data-penta-select],
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   border-radius: var(--form-border-radius);
-  border: var(--form-border-width) solid var(--gray-extra-light);
+  border: var(--form-border-width) solid var(--grey50);
   font-size: 1rem;
   background-color: #ffffff;
   transition: var(--transition-border), var(--transition-shadow);
   font-family: inherit;
   &:hover {
-    border-color: var(--gray-light);
+    border-color: var(--grey200);
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.10);
 
   }
   &:focus {
-    border-color: var(--primary-color-dark);
+    border-color: var(--primary-color700);
     box-shadow: var(--form-ring-shadow);
     outline: none;
   }
@@ -47,8 +47,8 @@ select[data-penta-select],
     
   }
 
-  &:disabled {
-    background-color: var(--gray-extra-light);
+  &:disabled, &[readonly] {
+    background-color: var(--grey50);
     cursor: not-allowed;
   }
 }

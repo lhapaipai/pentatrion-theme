@@ -43,18 +43,18 @@
   &:active {
     box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.15), 0 8px 10px 1px rgba(0, 0, 0, 0.15),
       0 3px 14px 2px rgba(0, 0, 0, 0.1);
-    background-color: var(--primary-color-active);
+    background-color: var(--primary-color600);
   }
 
   &.outlined {
-    border: var(--form-border-width) solid var(--gray-extra-light);
+    border: var(--form-border-width) solid var(--grey50);
     background-color: white;
 
     &:active {
       background-color: #eeeeee;
     }
     &:hover {
-      border-color: var(--gray-light);
+      border-color: var(--grey200);
     }
   }
 
@@ -65,11 +65,12 @@
   &:disabled {
     background-color: white;
     color: var(--gray);
-    border-color: var(--gray-light);
+    border-color: var(--grey200);
     cursor: not-allowed;
     &:hover,
     &:active,
     & {
+      color: var(--gray);
       box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.15),
         0 2px 2px 0px rgba(0, 0, 0, 0.15), 0 1px 5px 0px rgba(0, 0, 0, 0.1);
     }
