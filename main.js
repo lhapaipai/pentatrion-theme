@@ -1,4 +1,4 @@
-import "./css/index.css";
+import "./css/index.scss";
 import PentaInputRange from "./js/PentaInputRange";
 import PentaSelect from "./js/PentaSelect";
 

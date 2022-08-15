@@ -1,16 +1,12 @@
-import { defineConfig } from 'vite'
-import postcssConfig from "./postcss.config.js";
+import { defineConfig } from "vite";
 
 export default defineConfig({
-  css: {
-    postcss: postcssConfig
-  },
   build: {
     minify: false,
     lib: {
-      entry: 'main.js',
-      fileName: 'pentatrion-theme',
-      formats: ['es']
-    }
-  }
+      entry: "main.js",
+      fileName: "pentatrion-theme",
+      formats: ["es"],
+    },
+  },
 });

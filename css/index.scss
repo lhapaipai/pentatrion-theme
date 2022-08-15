@@ -1,0 +1,26 @@
+@import "./variables.scss";
+@import "./button.scss";
+@import "./text-textarea-select.scss";
+@import "./checkbox-radio.scss";
+@import "./toggle.scss";
+@import "./file.scss";
+@import "./select-custom.scss";
+
+@import "./range/input-reset.scss";
+@import "./range/input.scss";
+@import "./range/trackline.scss";
+
+body {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+}
+
+#box {
+  margin: 0 auto;
+  max-width: 400px;
+  height: 500px;
+}
+
+h3 {
+  margin-top: 4rem;
+  margin-bottom: 1rem;
+}
